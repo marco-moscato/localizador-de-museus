@@ -38,3 +38,4 @@ public class CollectionTypeController {
     }
   }
 }
+// Iniciando projeto...
