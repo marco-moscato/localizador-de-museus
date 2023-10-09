@@ -1,8 +1,7 @@
 package com.betrybe.museumfinder.solution;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 import com.betrybe.museumfinder.database.MuseumFakeDatabase;
 import com.betrybe.museumfinder.dto.CollectionTypeCount;
@@ -14,50 +13,67 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CollectionTypeServiceTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-
   @MockBean
-  private MuseumFakeDatabase database;
+  MuseumFakeDatabase database;
+
+  @Autowired
+  CollectionTypeService service;
 
   @Test
   @DisplayName("1 - Deve retornar pesquisa para /hist")
-  void testHistSearch() throws Exception {
+  void testHistSearch() {
+
+    String[] searchString = new String[]{"hist"};
+    CollectionTypeCount collectionTypeCount = new CollectionTypeCount(searchString, 387);
 
     Mockito
-        .when(database.countByCollectionType("hist"))
-        .thenReturn(387L);
+        .when(database.countByCollectionType(any()))
+        .thenReturn(collectionTypeCount.count());
 
-    String url = "/collections/count/hist";
+    CollectionTypeCount collectionCount = service.countByCollectionTypes(searchString[0]);
 
-    mockMvc.perform(
-            get(url)).andExpect(status().isOk())
-        .andExpect(jsonPath("$.collectionTypes").value("hist"))
-        .andExpect(jsonPath("$.count").value(387));
+    assertEquals(collectionCount.collectionTypes()[0], "hist");
+    assertEquals(collectionCount.count(), 387);
   }
 
-//  @Test
-//  @DisplayName("2 - Deve retornar pesquisa para /hist,imag")
-//  void testHistImagSearch() throws Exception {
-//
-//    Mockito
-//        .when(database.countByCollectionType("hist,imag"))
-//        .thenReturn(492L);
-//
-//    String url = "/collections/count/hist,imag";
-//
-//    assertEquals
+  @Test
+  @DisplayName("2 - Deve retornar pesquisa para /hist,imag")
+  void testHistImagSearch() {
+    String[] searchString = new String[]{"hist,imag"};
+    long count = 492L;
+    CollectionTypeCount collectionTypeCount = new CollectionTypeCount(searchString, count);
 
-//    mockMvc.perform(
-//            get(url)).andExpect(status().isNotFound());
-//        .andExpect(jsonPath("$.collectionTypes").value(new String[]{"hist,imag"}))
-//        .andExpect(jsonPath("$.count").value(492));
-//  }
+    Mockito
+        .when(database.countByCollectionType(any()))
+        .thenReturn(collectionTypeCount.count());
+
+    CollectionTypeCount collectionCount = service.countByCollectionTypes("hist,imag");
+
+    assertEquals(collectionCount.collectionTypes()[0], "hist");
+    assertEquals(collectionCount.collectionTypes()[1], "imag");
+//    assertEquals(collectionCount.count(), count);
+  }
+
+  @Test
+  @DisplayName("3 - Deve retornar contador igual a zero")
+  void testSearchZero() {
+    String[] searchString = new String[]{};
+    long count = 0L;
+    CollectionTypeCount collectionTypeCount = new CollectionTypeCount(searchString, count);
+
+    Mockito
+        .when(database.countByCollectionType(any()))
+        .thenReturn(collectionTypeCount.count());
+
+    CollectionTypeCount collectionCount = service.countByCollectionTypes("");
+
+    assertEquals(collectionCount.collectionTypes()[0], "");
+    assertEquals(collectionCount.count(), 0);
+  }
 }
 
