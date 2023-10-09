@@ -2,6 +2,7 @@ package com.betrybe.museumfinder.controller;
 
 import com.betrybe.museumfinder.dto.MuseumCreationDto;
 import com.betrybe.museumfinder.dto.MuseumDto;
+import com.betrybe.museumfinder.exception.MuseumNotFoundException;
 import com.betrybe.museumfinder.model.Coordinate;
 import com.betrybe.museumfinder.model.Museum;
 import com.betrybe.museumfinder.service.MuseumServiceInterface;
@@ -100,19 +101,23 @@ public class MuseumController {
    */
   @GetMapping("/{id}")
   public ResponseEntity<MuseumDto> findById(@PathVariable Long id) {
-    Museum museum = service.getMuseum(id);
+    try {
+      Museum museum = service.getMuseum(id);
 
-    MuseumDto museumDto = new MuseumDto(
-        museum.getId(),
-        museum.getName(),
-        museum.getDescription(),
-        museum.getAddress(),
-        museum.getCollectionType(),
-        museum.getSubject(),
-        museum.getUrl(),
-        museum.getCoordinate()
-        );
+      MuseumDto museumDto = new MuseumDto(
+          museum.getId(),
+          museum.getName(),
+          museum.getDescription(),
+          museum.getAddress(),
+          museum.getCollectionType(),
+          museum.getSubject(),
+          museum.getUrl(),
+          museum.getCoordinate()
+      );
 
-    return ResponseEntity.ok(museumDto);
+      return ResponseEntity.ok(museumDto);
+    } catch (MuseumNotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 }
