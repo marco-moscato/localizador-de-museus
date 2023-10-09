@@ -96,7 +96,7 @@ public class MuseumController {
   }
 
   /**
-   * Método busca por um museu pelo id.
+   * Método busca por museu pelo id.
    *
    * @param id id do museu
    * @return museum
