@@ -97,9 +97,6 @@ public class MuseumController {
 
   /**
    * Método busca por museu pelo id.
-   *
-   * @param id id do museu
-   * @return museum
    */
   @GetMapping("/{id}")
   public ResponseEntity<MuseumDto> findById(@PathVariable Long id) {
