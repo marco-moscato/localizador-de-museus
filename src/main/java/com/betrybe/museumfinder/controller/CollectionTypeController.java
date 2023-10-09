@@ -1,6 +1,7 @@
 package com.betrybe.museumfinder.controller;
 
 import com.betrybe.museumfinder.dto.CollectionTypeCount;
+import com.betrybe.museumfinder.exception.MuseumNotFoundException;
 import com.betrybe.museumfinder.service.CollectionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,4 +39,3 @@ public class CollectionTypeController {
     }
   }
 }
-// Iniciando projeto...
