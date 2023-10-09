@@ -2,9 +2,12 @@ package com.betrybe.museumfinder.solution;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 import com.betrybe.museumfinder.database.MuseumFakeDatabase;
+import com.betrybe.museumfinder.exception.MuseumNotFoundException;
 import com.betrybe.museumfinder.model.Coordinate;
 import com.betrybe.museumfinder.model.Museum;
 import com.betrybe.museumfinder.service.MuseumServiceInterface;
@@ -27,7 +30,7 @@ public class MuseumServiceTest {
 
   @Test
   @DisplayName("1 - Deve retornar um museu pelo id na camada service")
-  void testFindByIdService() throws Exception {
+  public void testFindByIdService() throws Exception {
     Museum museum = new Museum();
 
     museum.setName("Museu de Artes");
@@ -55,6 +58,21 @@ public class MuseumServiceTest {
     assertEquals(museum.getAddress(), mockMuseum.getAddress());
     assertEquals(museum.getUrl(), mockMuseum.getUrl());
     assertEquals(museum.getCollectionType(), mockMuseum.getCollectionType());
-    assertEquals(museum.getDescription(), museum.getDescription());
+    assertEquals(museum.getDescription(), mockMuseum.getDescription());
+
+    Mockito.verify(database).getMuseum(eq(id));
+  }
+
+  @Test
+  @DisplayName("2 - Deve retornar um erro caso id não exista")
+  public void testFindByIdNotFound() {
+    Mockito
+        .when(database.getMuseum(any()))
+        .thenReturn(Optional.empty());
+
+    assertThrows(
+        MuseumNotFoundException.class,
+        () -> service.getMuseum(999L)
+    );
   }
 }
