@@ -44,19 +44,20 @@ public class CollectionTypeServiceTest {
   @Test
   @DisplayName("2 - Deve retornar pesquisa para /hist,imag")
   void testHistImagSearch() {
-    String[] searchString = new String[]{"hist,imag"};
-    long count = 492L;
-    CollectionTypeCount collectionTypeCount = new CollectionTypeCount(searchString, count);
+//    String[] searchString = new String[]{"hist"};
+//    long count = 492L;
+    CollectionTypeCount collectionTypeCount = new CollectionTypeCount(new String[]{"hist"}, 387L);
+    CollectionTypeCount collectionTypeCount2 = new CollectionTypeCount(new String[]{"imag"}, 105L);
 
     Mockito
         .when(database.countByCollectionType(any()))
-        .thenReturn(collectionTypeCount.count());
+        .thenReturn(collectionTypeCount.count()).thenReturn(collectionTypeCount2.count());
 
     CollectionTypeCount collectionCount = service.countByCollectionTypes("hist,imag");
 
     assertEquals(collectionCount.collectionTypes()[0], "hist");
     assertEquals(collectionCount.collectionTypes()[1], "imag");
-//    assertEquals(collectionCount.count(), count);
+    assertEquals(collectionCount.count(), 492);
   }
 
   @Test
