@@ -41,5 +41,23 @@ public class CollectionTypeServiceTest {
         .andExpect(jsonPath("$.collectionTypes").value("hist"))
         .andExpect(jsonPath("$.count").value(387));
   }
+
+//  @Test
+//  @DisplayName("2 - Deve retornar pesquisa para /hist,imag")
+//  void testHistImagSearch() throws Exception {
+//
+//    Mockito
+//        .when(database.countByCollectionType("hist,imag"))
+//        .thenReturn(492L);
+//
+//    String url = "/collections/count/hist,imag";
+//
+//    assertEquals
+
+//    mockMvc.perform(
+//            get(url)).andExpect(status().isNotFound());
+//        .andExpect(jsonPath("$.collectionTypes").value(new String[]{"hist,imag"}))
+//        .andExpect(jsonPath("$.count").value(492));
+//  }
 }
 
